@@ -1,4 +1,10 @@
-/* Notes:
+/*
+
+== todo ==
+. Checkout fork that allows overlapping combos: https://github.com/sevanteri/qmk_firmware
+
+
+== Notes ==
 
 . mod-tap timing is no good for fast typing.  Use mod keys, not mod-tap.
 .. I've tried many variations of timings, permissive hold, retro tapping etc.
