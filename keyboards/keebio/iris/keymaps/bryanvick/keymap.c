@@ -17,53 +17,32 @@ https://www.reddit.com/r/ErgoMechKeyboards/comments/ifenwa/thoughts_on_layout_2_
 #include QMK_KEYBOARD_H
 
 #define _QWERTY 0
-#define _RAISE 2
-#define _L3 3
-#define _L4 4
-#define _L5 5
-#define _LNUM 6
+#define _MOUSE 2
+#define _NAV 3
+#define _NUM 4
+#define _MEDIA 5
 #define _GAME 7
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
-  RAISE,
-  L3,
-  L4,
-  L5,
+  MOUSE,
+  NAV,
+  NUM,
+  MEDIA,
+  GAME,
 };
 
 
 // Aliases for prettier layouts below.
-#define MONUM MO(_L4)
-#define MORAISE MO(_RAISE)
-#define MINRAIS LT(_RAISE, KC_MINUS)
+#define MONUM MO(_NUM)
 #define LALTENT LALT_T(KC_ENT)
-#define MOLNUM MO(_LNUM)
-
-// Maybe the same key that enables numbers can provide a dot?  Turns
-// out, doesn't work well.  Need to release key, then press it, then
-// hold back down to type a number with a deicmal
-//#define DOTNUM LT(_L4, KC_DOT)
-
-// Couldn't get timing to work on this well.
-//#define QUOTCTL MT(MOD_RCTL, KC_QUOT)
 
 
-
-#define ENTNUM LT(_L4, KC_ENT) // Tap enter, hold numpad
-
-// Trying to use space in mod tap, with short tap term specific to this combo.
-#define SPCCTL MT(MOD_RCTL, KC_SPC)
-
-// Symetry in Ctrl
+// Ctrl when held, Esc when tapped.
 #define CTLESC MT(MOD_LCTL, KC_ESC)
-// 2020-05-05: This wasn working for me.  The tap delay was causing issues when
-// I was trying to type English full speed.  I never use right control anyways,
-// so I'm removing this.
-//#define LCTLQU MT(MOD_RCTL, KC_QUOT)  // Right ctrl on hold, quote on tap.
 
 // Layer 3 when held, semicolon when tapped.
-#define L3SLN LT(_L3,KC_SCLN)
+#define NAVSLN LT(_NAV,KC_SCLN)
 
 
 // Homerow combinations
@@ -79,7 +58,6 @@ const uint16_t PROGMEM combo_h_j[] = {KC_H, KC_J, COMBO_END};
 const uint16_t PROGMEM combo_l_semic[] = {KC_L, KC_SCOLON, COMBO_END};
 const uint16_t PROGMEM combo_semic_quote[] = {KC_SCOLON, KC_QUOTE, COMBO_END};
 const uint16_t PROGMEM combo_right_thumb_bash[] = {KC_SPACE, KC_INS, COMBO_END};
-
 const uint16_t PROGMEM combo_j_thumb[] = {KC_RCTL, KC_J, COMBO_END};
 const uint16_t PROGMEM combo_f_thumb[] = {KC_LCTL, KC_F, COMBO_END};
 
@@ -166,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
    KC_TAB  ,KC_Q    ,KC_W    ,KC_E    ,KC_R    ,KC_T    ,                KC_Y    ,KC_U    ,KC_I    ,KC_O    ,KC_P    ,KC_PIPE ,
 //├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
-   CTLESC  ,KC_A    ,KC_S    ,KC_D    ,KC_F    ,KC_G    ,                KC_H    ,KC_J    ,KC_K    ,KC_L    , L3SLN  , KC_QUOT,
+   CTLESC  ,KC_A    ,KC_S    ,KC_D    ,KC_F    ,KC_G    ,                KC_H    ,KC_J    ,KC_K    ,KC_L    , NAVSLN , KC_QUOT,
 //├────────┼────────┼────────┼────────┼────────┼────────┼───────┬───────┼────────┼────────┼────────┼────────┼────────┼────────┤
    KC_LSFT ,KC_Z    ,KC_X    ,KC_C    ,KC_V    ,KC_B    ,TG(_GAME),KC_INS ,KC_N    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_SLSH ,KC_RSFT ,
 //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬───┴──┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -174,24 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 
-/*
-PURPOSE: Mouse, RGB
-[_RAISE] = LAYOUT(
-//┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-   KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-//├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-   RGB_TOG, _______, _______, _______, _______, _______,                            _______,KC_WH_U, KC_ASTR, KC_LPRN, KC_RPRN, _______,
-//├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-   RGB_MOD, _______, _______, _______, _______, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, RGB_VAI, _______,
-//├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-   BL_STEP, _______, _______, _______, _______, _______, KC_SLEP,          KC_WAKE, _______, KC_WH_D,  RGB_HUD, RGB_SAD, RGB_VAD, _______,
-//└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                  _______, KC_BTN1, KC_BTN2,                   _______, _______, _______
-                              // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
-),
-*/
-
-[_L3] = LAYOUT(
+[_NAV] = LAYOUT(
 //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
    _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
 //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -206,11 +167,7 @@ PURPOSE: Mouse, RGB
 ),
 
 
-/*
-Purpose: Right-hand numpad.
-*/
-
-  [_L4] = LAYOUT(
+  [_NUM] = LAYOUT(
 //┌────────┬────────┬────────┬────────┬────────┬────────┐               ┌────────┬────────┬────────┬────────┬────────┬────────┐
    DEBUG   , KC_9    , KC_7    ,KC_5    ,KC_3    ,KC_1    ,                KC_0    ,KC_2    ,KC_4    ,KC_6    ,KC_8    ,_______ ,
 //├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -225,11 +182,7 @@ Purpose: Right-hand numpad.
 ),
 
 
-/*
-Purpose: Media controls.
-*/
-
-  [_L5] = LAYOUT(
+  [_MEDIA] = LAYOUT(
 //┌────────┬────────┬────────┬────────┬────────┬────────┐               ┌────────┬────────┬────────┬────────┬────────┬────────┐
    XXXXXXX, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,                XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,
 //├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -240,20 +193,6 @@ Purpose: Media controls.
    XXXXXXX, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX,XXXXXXX,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,
 //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬───┴──┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                   XXXXXXX ,XXXXXXX ,XXXXXXX ,       KC_MPLY ,KC_MUTE , XXXXXXX
-//                               └────────┴────────┴────────┘      └────────┴────────┴────────┘
-),
-
-  [_LNUM] = LAYOUT(
-//┌────────┬────────┬────────┬────────┬────────┬────────┐               ┌────────┬────────┬────────┬────────┬────────┬────────┐
-   _______, KC_9    , KC_7    ,KC_5    ,KC_3    ,KC_1    ,                KC_0    ,KC_2    ,KC_4    ,KC_6    ,KC_8    ,_______ ,
-//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, KC_7    ,KC_8    ,KC_9    ,XXXXXXX ,                KC_MINUS,KC_7    ,KC_8    ,KC_9    ,KC_ASTR ,XXXXXXX ,
-//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, KC_4     ,KC_5   ,KC_6    ,XXXXXXX ,                KC_PLUS ,KC_4    ,KC_5    ,KC_6    ,KC_ASTR ,XXXXXXX ,
-//├────────┼────────┼────────┼────────┼────────┼────────┼───────┬───────┼────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, KC_1    ,KC_2    ,KC_3    ,XXXXXXX ,RESET  ,_______,KC_0    ,KC_1    ,KC_2    ,KC_3    ,_______ ,_______ ,
-//└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬───┴──┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                  XXXXXXX ,KC_0    ,XXXXXXX ,       KC_0    ,KC_0    , _______
 //                               └────────┴────────┴────────┘      └────────┴────────┴────────┘
 ),
 
@@ -274,19 +213,38 @@ Purpose: Media controls.
 
 
 /*
-// Right-hand numpad, 123 on homerow.
-//┌────────┬────────┬────────┬────────┬────────┬────────┐               ┌────────┬────────┬────────┬────────┬────────┬────────┐
-   _______, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,                XXXXXXX ,KC_7    ,KC_8    ,KC_9    ,XXXXXXX ,_______ ,
-//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,                XXXXXXX ,KC_4    ,KC_5    ,KC_6    ,XXXXXXX ,XXXXXXX ,
-//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,                XXXXXXX ,KC_1    ,KC_2    ,KC_3    ,XXXXXXX ,XXXXXXX ,
-//├────────┼────────┼────────┼────────┼────────┼────────┼───────┬───────┼────────┼────────┼────────┼────────┼────────┼────────┤
-   _______, XXXXXXX, XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX,XXXXXXX,XXXXXXX ,KC_0    ,XXXXXXX ,KC_DOT  ,XXXXXXX ,_______ ,
-//└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬───┴──┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                  XXXXXXX ,XXXXXXX ,XXXXXXX ,       XXXXXXX ,KC_0    , XXXXXXX
-//                               └────────┴────────┴────────┘      └────────┴────────┴────────┘
+PURPOSE: Mouse, RGB
+[_MOUSE] = LAYOUT(
+//┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+   KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+//├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+   RGB_TOG, _______, _______, _______, _______, _______,                            _______,KC_WH_U, KC_ASTR, KC_LPRN, KC_RPRN, _______,
+//├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+   RGB_MOD, _______, _______, _______, _______, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, RGB_VAI, _______,
+//├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+   BL_STEP, _______, _______, _______, _______, _______, KC_SLEP,          KC_WAKE, _______, KC_WH_D,  RGB_HUD, RGB_SAD, RGB_VAD, _______,
+//└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                  _______, KC_BTN1, KC_BTN2,                   _______, _______, _______
+                              // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+),
 */
+
+/* Left-hand numpad
+  [_LNUM] = LAYOUT(
+//┌────────┬────────┬────────┬────────┬────────┬────────┐               ┌────────┬────────┬────────┬────────┬────────┬────────┐
+   _______, KC_9    , KC_7    ,KC_5    ,KC_3    ,KC_1    ,                KC_0    ,KC_2    ,KC_4    ,KC_6    ,KC_8    ,_______ ,
+//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
+   _______, XXXXXXX, KC_7    ,KC_8    ,KC_9    ,XXXXXXX ,                KC_MINUS,KC_7    ,KC_8    ,KC_9    ,KC_ASTR ,XXXXXXX ,
+//├────────┼────────┼────────┼────────┼────────┼────────┤               ├────────┼────────┼────────┼────────┼────────┼────────┤
+   _______, XXXXXXX, KC_4     ,KC_5   ,KC_6    ,XXXXXXX ,                KC_PLUS ,KC_4    ,KC_5    ,KC_6    ,KC_ASTR ,XXXXXXX ,
+//├────────┼────────┼────────┼────────┼────────┼────────┼───────┬───────┼────────┼────────┼────────┼────────┼────────┼────────┤
+   _______, XXXXXXX, KC_1    ,KC_2    ,KC_3    ,XXXXXXX ,RESET  ,_______,KC_0    ,KC_1    ,KC_2    ,KC_3    ,_______ ,_______ ,
+//└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬───┴──┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                  XXXXXXX ,KC_0    ,XXXXXXX ,       KC_0    ,KC_0    , _______
+//                               └────────┴────────┴────────┘      └────────┴────────┴────────┘
+),
+*/
+
 
 
 /*
@@ -320,47 +278,6 @@ void process_combo_event(uint16_t combo_index, bool pressed){
     }
 }
 
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//    switch (keycode){
-//        case COMMA_SPACE: {
-//            if (record->event.pressed){
-//                // When key pressed down.
-//                SEND_STRING(", ");
-//            }
-//            break;
-//        }
-//    }
-//    return true;
-//}
-//  switch (keycode) {
-//    case QWERTY:
-//      if (record->event.pressed) {
-//        set_single_persistent_default_layer(_QWERTY);
-//      }
-//      return false;
-//      break;
-//    case RAISE:
-//      if (record->event.pressed) {
-//        layer_on(_RAISE);
-//        update_tri_layer(_LOWER, _RAISE, _L3);
-//      } else {
-//        layer_off(_RAISE);
-//        update_tri_layer(_LOWER, _RAISE, _L3);
-//      }
-//      return false;
-//      break;
-//    case L3:
-//      if (record->event.pressed) {
-//        layer_on(_L3);
-//      } else {
-//        layer_off(_L3);
-//      }
-//      return false;
-//      break;
-//  }
-//  return true;
-//}
-
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) {
         if (clockwise) {
@@ -375,25 +292,5 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         } else {
             tap_code(KC_PGUP);
         }
-    }
-}
-
-
-// Tapping term per key.
-// Originally written to shorten tap term on space
-// This function is only consulted if TAPPING_TERM_PER_KEY is defined
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record){
-  switch (keycode){
-  case SPCCTL:
-    return 500;
-  default:
-    return TAPPING_TERM;
-  }
-}
-
-bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        default:
-            return false;
     }
 }
